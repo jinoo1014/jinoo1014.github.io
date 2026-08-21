@@ -734,20 +734,17 @@ footer{background:#04161e; padding:52px 0 118px}
             <label for="fCat">상담 카테고리</label>
             <select id="fCat" name="category">
               <option>개인사업자</option>
-              <option>법인</option>
-              <option>프리랜서·3.3%</option>
-              <option>상속·증여</option>
-              <option>양도소득</option>
-              <option>기타</option>
+              <option>법인사업자</option>
+              <option>종교단체</option>
+              <option>일반개인 및 기타</option>
             </select>
           </div>
           <div class="f-group">
             <label for="fSvc">원하시는 서비스</label>
             <select id="fSvc" name="service">
               <option>세무기장</option>
-              <option>신고 대리</option>
-              <option>세무 상담·자문</option>
-              <option>상속·증여 설계</option>
+              <option>세무상담자문</option>
+              <option>양도상속증여</option>
               <option>기타</option>
             </select>
           </div>
@@ -850,6 +847,26 @@ footer{background:#04161e; padding:52px 0 118px}
      비워두면 데모 모드: 전송 없이 성공 화면만 보여줌. */
   var ENDPOINT='https://script.google.com/macros/s/AKfycbwhJ0_zkLlm6x1lAAMwRGfyG8xTDL7d85YXqgvM2m0tDi_UyBREH3-j8vpuzpCleJpd/exec';
   var form=document.getElementById('consultForm');
+  /* 연락처 자동 하이픈 (휴대폰 3-4-4, 서울 02-, 지역번호 3자리 대응) */
+  var telEl=document.getElementById('fTel');
+  if(telEl){
+    telEl.addEventListener('input', function(){
+      var v=telEl.value.replace(/\D/g,'').slice(0,11), o;
+      if(v.indexOf('02')===0){
+        if(v.length<3) o=v;
+        else if(v.length<6) o=v.slice(0,2)+'-'+v.slice(2);
+        else if(v.length<10) o=v.slice(0,2)+'-'+v.slice(2,5)+'-'+v.slice(5);
+        else o=v.slice(0,2)+'-'+v.slice(2,6)+'-'+v.slice(6,10);
+      }else{
+        if(v.length<4) o=v;
+        else if(v.length<7) o=v.slice(0,3)+'-'+v.slice(3);
+        else if(v.length<11) o=v.slice(0,3)+'-'+v.slice(3,6)+'-'+v.slice(6);
+        else o=v.slice(0,3)+'-'+v.slice(3,7)+'-'+v.slice(7);
+      }
+      telEl.value=o;
+    });
+  }
+
   if(form){
     var btn=document.getElementById('fBtn'), st=document.getElementById('fStatus');
     form.addEventListener('submit', function(e){
